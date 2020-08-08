@@ -24,7 +24,10 @@ const Feedback = ({strings, handlers}) => {
 
 
 const Statistic = ({text, num}) => (
-	<p> {text} {num} </p>
+	<tr> 
+		<td>{text}</td> 
+		<td>{num}</td> 
+	</tr>
 )
 
 const Statistics = ({strings,statistics}) => {
@@ -34,12 +37,16 @@ const Statistics = ({strings,statistics}) => {
 
 			<>
 				<Header title="statistics"/>
-				<Statistic text={strings[0]} num={statistics[0]}/>
-				<Statistic text={strings[1]} num={statistics[1]}/>
-				<Statistic text={strings[2]} num={statistics[2]}/>
-				<Statistic text={strings[3]} num={statistics[3]}/>
-				<Statistic text={strings[4]} num={statistics[4]}/>
-				<Statistic text={strings[5]} num={statistics[5] + " %"}/>
+				<table>
+					<tbody>
+					<Statistic text={strings[0]} num={statistics[0]}/>
+					<Statistic text={strings[1]} num={statistics[1]}/>
+					<Statistic text={strings[2]} num={statistics[2]}/>
+					<Statistic text={strings[3]} num={statistics[3]}/>
+					<Statistic text={strings[4]} num={statistics[4]}/>
+					<Statistic text={strings[5]} num={statistics[5] + " %"}/>
+					</tbody>
+				</table>
 			</>
 		)
 	else
