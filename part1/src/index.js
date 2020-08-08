@@ -5,7 +5,7 @@ const Header = (props) => (
   <h1>{props.course}</h1>
 )
 
-const Exercise = (props) => (
+const Part = (props) => (
   <p>
     {props.name} {props.points}
   </p>
@@ -17,9 +17,9 @@ const Total = (props) => (
 
 const Content = (props) => (
   <>
-  <Exercise name={props.vars.part1} points={props.vars.exercises1} />
-  <Exercise name={props.vars.part2} points={props.vars.exercises2} />
-  <Exercise name={props.vars.part3} points={props.vars.exercises3} />
+  <Part name={props.vars.part1} points={props.vars.exercises1} />
+  <Part name={props.vars.part2} points={props.vars.exercises2} />
+  <Part name={props.vars.part3} points={props.vars.exercises3} />
   </>
 )
 
