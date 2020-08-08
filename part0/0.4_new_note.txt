@@ -1,0 +1,14 @@
+title 0.4_new_note
+
+note over browser:
+browser sends the form data to server
+end note
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+
+
+
+note over server:
+server saves the new note in data.json
+end note
+
+server-->browser: 302 Found. Redirect to /notes
