@@ -29,18 +29,27 @@ const Row = ({text, num}) => (
 
 const Statistics = ({strings,statistics}) => {
 
-	return (
+	if (statistics[0] || statistics[1] || statistics[2])
+		return (
 
-		<>
-			<Header title="statistics"/>
-			<Row text={strings[0]} num={statistics[0]}/>
-			<Row text={strings[1]} num={statistics[1]}/>
-			<Row text={strings[2]} num={statistics[2]}/>
-			<Row text={strings[3]} num={statistics[3]}/>
-			<Row text={strings[4]} num={statistics[4]}/>
-			<Row text={strings[5]} num={statistics[5] + " %"}/>
-		</>
-	)
+			<>
+				<Header title="statistics"/>
+				<Row text={strings[0]} num={statistics[0]}/>
+				<Row text={strings[1]} num={statistics[1]}/>
+				<Row text={strings[2]} num={statistics[2]}/>
+				<Row text={strings[3]} num={statistics[3]}/>
+				<Row text={strings[4]} num={statistics[4]}/>
+				<Row text={strings[5]} num={statistics[5] + " %"}/>
+			</>
+		)
+	else
+		return (
+
+			<>
+				<Header title="statistics"/>
+				<p> No feedback given </p>
+			</>
+		)
 }
 
 
