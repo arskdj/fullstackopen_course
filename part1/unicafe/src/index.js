@@ -36,6 +36,9 @@ const Statistics = ({strings,statistics}) => {
 			<Row text={strings[0]} num={statistics[0]}/>
 			<Row text={strings[1]} num={statistics[1]}/>
 			<Row text={strings[2]} num={statistics[2]}/>
+			<Row text={strings[3]} num={statistics[3]}/>
+			<Row text={strings[4]} num={statistics[4]}/>
+			<Row text={strings[5]} num={statistics[5] + " %"}/>
 		</>
 	)
 }
@@ -52,8 +55,11 @@ const App = () => {
 	const incNeutral = () => setNeutral(neutral+1)
 	const incBad = ()=> setBad(bad+1)
 
-	const strings = ["good", "neutral", "bad"]
-	const statistics = [ good, neutral, bad]
+	const all = good + bad + neutral
+	const average = (good - bad)/all
+	const positive = good/all*100
+	const strings = ["good", "neutral", "bad", "all", "average", "positive"]
+	const statistics = [ good, neutral, bad, all, average, positive]
 	const handlers = [incGood, incNeutral, incBad]
 
 	return (
