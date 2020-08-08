@@ -1,0 +1,18 @@
+title 0.6 new note spa
+
+note over browser:
+browser adds new note in html using javascript
+end note
+
+note over browser:
+browser sends the note to server
+end note
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+
+
+note over server:
+server saves the new note in data.json
+end note
+
+server-->browser: 301 Created. {"message":"note created"}
