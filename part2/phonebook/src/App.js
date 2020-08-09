@@ -3,19 +3,19 @@ import React, { useState } from 'react'
 const Phonebook = () => { 
     console.log()
     return (
-            <>
-            </>
+        <>
+        </>
     )
 }
 
 const Numbers = ({persons}) => { 
-    console.log(persons)
-
 
     return (
-                <div>
-                <h2>Numbers</h2>
-                { persons.map( p => <p key={p.name} > {p.name} </p> ) }
+        <div>
+            <h2>Numbers</h2>
+            <ul> 
+                { persons.map( p => <li key={p.name} > {p.name} </li> ) } 
+            </ul>
         </div>
     ) 
 }
@@ -31,17 +31,21 @@ const App = () => {
     const [ newName, setNewName ] = useState('')
 
     const handleNewNameChange = (event) => {
-        const value = event.target.value
-        console.log(value)
-        setNewName(value)
+        setNewName(event.target.value)
     }
 
 
     const addPerson = (event) => { 
-        console.log("addPerson called. values = ", event)
+        console.log("addPerson called.", newName)
+
         event.preventDefault()
-        setPersons(persons.concat({name:newName})) 
-        setNewName('')
+
+        if (persons.findIndex(p => p.name === newName) + 1) {
+            alert(`${newName} is already in the phonebook`)
+        }else{
+            setPersons(persons.concat({name:newName})) 
+            setNewName('')
+        }
     }
 
     return (
