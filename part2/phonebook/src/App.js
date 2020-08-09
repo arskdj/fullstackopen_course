@@ -1,19 +1,57 @@
 import React, { useState } from 'react'
 
-const Phonebook = () => { 
+const Search = ({search, handler}) => {
+
+
+
+    return (
+        <div>
+            <input value={search} onChange={handler}/>
+        </div>
+    )
+}
+
+const Phonebook = ({persons, setPersons}) => { 
+    const [ newName, setNewName ] = useState('')
+    const [ newNumber, setNewNumber ] = useState('')
+
+    const handleNewNameChange = (event) => setNewName(event.target.value)
+    const handleNewNumberChange = (event) => setNewNumber(event.target.value)
+
+    const addPerson = (event) => { 
+        event.preventDefault()
+
+        if (persons.findIndex(p => p.name === newName) + 1) {
+            alert(`${newName} is already in the phonebook`)
+        }else{
+            setPersons(persons.concat({name:newName, number: newNumber})) 
+            setNewName('')
+            setNewNumber('')
+        }
+    }
+
     return (
         <>
+            <form>
+                <div>
+                    name: <input value={newName} onChange={handleNewNameChange}/>
+                    <br/>
+                    number: <input value={newNumber} onChange={handleNewNumberChange}/>
+                </div>
+                <div>
+                    <button type="submit" onClick={addPerson}>add</button>
+                </div>
+            </form>
         </>
     )
 }
 
-const Numbers = ({persons}) => { 
+const Numbers = ({filteredPersons}) => { 
 
     return (
         <div>
-            <h2>Numbers</h2>
             <ul> 
-                { persons.map( p => <li key={p.name} > {p.name} {p.number}</li> ) } 
+                { filteredPersons.map( p => <li key={p.name} > {p.name} {p.number}</li> ) } 
             </ul>
         </div>
     ) 
@@ -30,38 +68,8 @@ const App = () => {
         { name: 'Mary Poppendieck', number: '39-23-6423122' }
     ])
 
-    const [ newName, setNewName ] = useState('')
-    const [ newNumber, setNewNumber ] = useState('')
     const [ search, setSearch ] = useState('')
-
-    const handleNewNameChange = (event) => {
-        setNewName(event.target.value)
-    }
-
-    const handleNewNumberChange = (event) => {
-        setNewNumber(event.target.value)
-    }
-
-
-    const handleSearchChange = (event) => {
-
-        let search = event.target.value 
-        setSearch(search)
-        
-    }
-
-    const addPerson = (event) => { 
-
-        event.preventDefault()
-
-        if (persons.findIndex(p => p.name === newName) + 1) {
-            alert(`${newName} is already in the phonebook`)
-        }else{
-            setPersons(persons.concat({name:newName, number: newNumber})) 
-            setNewName('')
-            setNewNumber('')
-        }
-    }
+    const handleSearchChange = (event) => setSearch(event.target.value)
 
     const filteredPersons = (()  => {
         const comparator = (p) => { 
@@ -70,26 +78,21 @@ const App = () => {
             return pname.includes(sname)
         }
 
-        return search === "" ? persons 
+        return search === "" 
+            ? persons 
             : persons.filter(comparator)     
     })()
 
     return (
         <div>
             <h2>Search</h2>
-            <input value={search} onChange={handleSearchChange}/>
+            <Search search={search} handler={handleSearchChange} />
+
             <h2>Phonebook</h2>
-            <form>
-                <div>
-                    name: <input value={newName} onChange={handleNewNameChange}/>
-                    <br/>
-                    number: <input value={newNumber} onChange={handleNewNumberChange}/>
-                </div>
-                <div>
-                    <button type="submit" onClick={addPerson}>add</button>
-                </div>
-            </form>
-            <Numbers persons={filteredPersons}/>
+            <Phonebook persons={persons} setPersons={setPersons} />
+
+            <h2>Numbers</h2>
+            <Numbers filteredPersons={filteredPersons} />
         </div>
     )
 }
