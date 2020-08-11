@@ -1,6 +1,24 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios'
 
+const Weather = ({weather}) => {
+    console.log('rendering weather')
+
+    if (weather === undefined || Object.entries(weather).length === 0 || weather.success === false) {
+        return <div>  </div> 
+    }
+
+    console.log(weather)
+    return (
+        <div>
+            <h1> Weather in {weather.request.query} </h1>            
+            <img width="100" src={weather.current.weather_icons[0]} alt={weather.current.weather_icons[0]} />
+            <p> temp: {weather.current.temperature} Celsius </p>
+            <p> wind: { weather.current.wind_speed } mph direction { weather.current.wind_dir }</p>
+        </div>
+    )
+}
+
 const Search = ({search, searchChangeHandler}) => {
     console.log('rendering Search')
     return (
@@ -67,17 +85,20 @@ const App = () => {
     const [countries, setCountryList] = useState([])
     const [filteredCountries, setFilteredCountries] = useState([])
     const [selectedCountry , setSelectedCountry ] = useState({})
+    const [weather, setWeather] = useState({})
+
+    const apiKey = process.env.REACT_APP_WEATHER_API_KEY
 
     const searchChangeHandler = (event) => {
         setSearch(event.target.value)
     }
 
-    const getCountriesHook = () => {
+    const fetchCountriesHook = () => {
         axios
             .get('https://restcountries.eu/rest/v2/all')
             .then(response => setCountryList(response.data))
     }
-    useEffect( getCountriesHook, [])
+    useEffect( fetchCountriesHook, [])
 
 
     const filterCountriesHook = () => {
@@ -96,12 +117,21 @@ const App = () => {
     }
     useEffect( selectCountryHook, [filteredCountries])
 
+    const fetchWeatherHook = () => {
+        const url = `http://api.weatherstack.com/current?access_key=${apiKey}&query=${selectedCountry.capital}`
+        axios
+            .get(url)
+            .then(response => setWeather(response.data))
+        console.log(url)
+    }
+    useEffect( fetchWeatherHook, [selectedCountry])
 
     return (
         <div>
             <Search search={search} searchChangeHandler={searchChangeHandler} />
             <CountryList countries={filteredCountries} setSelectedCountry={setSelectedCountry} />
             <CountryDetails selectedCountry= {selectedCountry} />
+            <Weather weather= {weather} />
         </div>
     )
 }
