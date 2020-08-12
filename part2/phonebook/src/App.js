@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import service from './services/persons'
 
 const Search = ({search, handler}) => {
 
@@ -25,9 +25,12 @@ const Phonebook = ({persons, setPersons}) => {
         if (persons.findIndex(p => p.name === newName) + 1) {
             alert(`${newName} is already in the phonebook`)
         }else{
-            setPersons(persons.concat({name:newName, number: newNumber})) 
-            setNewName('')
-            setNewNumber('')
+            const newPerson = {name:newName, number: newNumber}
+            service.create(newPerson).then(res => {
+                setPersons(persons.concat(res)) 
+                setNewName('')
+                setNewNumber('')
+            })
         }
     }
 
@@ -48,47 +51,51 @@ const Phonebook = ({persons, setPersons}) => {
 }
 
 const Numbers = ({filteredPersons}) => { 
+    console.log('rendering Numbers',filteredPersons)
+    if (filteredPersons === undefined || Object.entries(filteredPersons) === 0)
+        return <div> <p> No persons in db </p> </div>
 
-    return (
-        <div>
-            <ul> 
-                { filteredPersons.map( p => <li key={p.name} > {p.name} {p.number}</li> ) } 
-            </ul>
-        </div>
-    ) 
+            return (
+                <div>
+                    <ul> 
+                        { filteredPersons.map( p => <li key={p.name} > {p.name} {p.number}</li> ) } 
+                    </ul>
+                </div>
+            ) 
 }
 
 
 
 
 const App = () => {
+    console.log('rendering App')
     const [ persons, setPersons ] = useState([])
     const [ search, setSearch ] = useState('')
     const handleSearchChange = (event) => setSearch(event.target.value)
 
-    const filteredPersons = (()  => {
-        const comparator = (p) => { 
+    const fetchHook = () => { 
+        service
+            .getAll()
+            .then(res => setPersons(res))
+        console.log('fetchHook', persons)
+    }
+    useEffect(fetchHook, [])
+
+
+    const filteredPersons = (() => {
+        const comparator = p => { 
             const pname = p.name.toLowerCase()
             const sname = search.toLowerCase()
             return pname.includes(sname)
         }
 
+
         return search === "" 
             ? persons 
             : persons.filter(comparator)     
+        console.log('filter hook', filteredPersons)
     })()
 
-    const fetchHook = () => { 
-        console.log('fetchHook called. values = ', )
-        axios
-            .get('http://localhost:3001/persons')
-            .then(response => {
-                console.log('promise fullfilled')
-                setPersons(response.data)
-            })
-    }
-
-    useEffect(fetchHook, [])
 
     return (
         <div>
