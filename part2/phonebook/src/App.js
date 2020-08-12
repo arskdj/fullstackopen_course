@@ -12,7 +12,7 @@ const Search = ({search, handler}) => {
     )
 }
 
-const Phonebook = ({persons, setPersons}) => { 
+const Phonebook = ({persons, setPersons, updatePerson}) => { 
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
 
@@ -22,8 +22,18 @@ const Phonebook = ({persons, setPersons}) => {
     const addPerson = (event) => { 
         event.preventDefault()
 
-        if (persons.findIndex(p => p.name === newName) + 1) {
-            alert(`${newName} is already in the phonebook`)
+        const comparator = p => {
+            const pname = p.name.toLowerCase()
+            const sname = newName.toLowerCase()
+            return sname === pname
+
+        }
+        const personIndex = persons.findIndex(comparator)
+        const msg = `${newName} is already in the phonebook. Do you want to update?`
+        if ((personIndex + 1) && window.confirm(msg)) {
+            const currentPerson = persons[personIndex]
+            const newPerson = { ...currentPerson , number: newNumber }
+            updatePerson(currentPerson.id, newPerson)
         }else{
             const newPerson = {name:newName, number: newNumber}
             service.create(newPerson).then(res => {
@@ -110,6 +120,13 @@ const App = () => {
         )
     }
 
+    const updatePerson = (personId, newPerson) => {
+        service.update(personId, newPerson).then( res =>
+            setPersons(persons.map( person => 
+                person.id === personId ? res : person
+            ))
+        )
+    }
 
     return (
         <div>
@@ -117,7 +134,7 @@ const App = () => {
             <Search search={search} handler={handleSearchChange} />
 
             <h2>Phonebook</h2>
-            <Phonebook persons={persons} setPersons={setPersons} />
+            <Phonebook persons={persons} setPersons={setPersons} updatePerson= {updatePerson}/>
 
             <h2>Numbers</h2>
             <Numbers filteredPersons={filteredPersons} deletePerson= {deletePerson}/>
