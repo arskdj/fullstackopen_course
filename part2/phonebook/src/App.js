@@ -54,7 +54,7 @@ const Search = ({search, handler}) => {
     )
 }
 
-const Phonebook = ({persons, setPersons, updatePerson, createPerson}) => { 
+const Phonebook = ({persons, updatePerson, createPerson}) => { 
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
 
@@ -70,10 +70,10 @@ const Phonebook = ({persons, setPersons, updatePerson, createPerson}) => {
             return sname === pname
 
         }
-        const personIndex = persons.findIndex(comparator)
+        const currentPerson = persons.find(comparator)
         const msg = `${newName} is already in the phonebook. Do you want to update?`
-        if ((personIndex + 1) && window.confirm(msg)) {
-            const currentPerson = persons[personIndex]
+
+        if (currentPerson && window.confirm(msg)) {
             const newPerson = { ...currentPerson , number: newNumber }
             updatePerson(currentPerson, newPerson)
         }else{
@@ -198,7 +198,7 @@ const App = () => {
             <Search search={search} handler={handleSearchChange} />
 
             <h2>Phonebook</h2>
-            <Phonebook persons={persons} setPersons={setPersons} updatePerson={updatePerson} createPerson={createPerson} />
+            <Phonebook persons={persons} updatePerson={updatePerson} createPerson={createPerson} />
 
             <h2>Numbers</h2>
             <Numbers filteredPersons={filteredPersons} deletePerson={deletePerson} />
