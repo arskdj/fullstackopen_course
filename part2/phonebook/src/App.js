@@ -50,7 +50,7 @@ const Phonebook = ({persons, setPersons}) => {
     )
 }
 
-const Numbers = ({filteredPersons}) => { 
+const Numbers = ({filteredPersons, deletePerson}) => { 
     console.log('rendering Numbers',filteredPersons)
     if (filteredPersons === undefined || Object.entries(filteredPersons) === 0)
         return <div> <p> No persons in db </p> </div>
@@ -58,12 +58,20 @@ const Numbers = ({filteredPersons}) => {
             return (
                 <div>
                     <ul> 
-                        { filteredPersons.map( p => <li key={p.name} > {p.name} {p.number}</li> ) } 
+                        { filteredPersons.map( p => <NumberRow key={p.name} person={p} deletePerson= {deletePerson} /> ) } 
                     </ul>
                 </div>
             ) 
 }
 
+
+const NumberRow = ({person, deletePerson}) => {
+    return (
+        <div>
+            <li> {person.name} {person.number} <button onClick={() => deletePerson(person.id)} > delete </button></li>
+        </div>
+    )
+}
 
 
 
@@ -96,6 +104,12 @@ const App = () => {
         console.log('filter hook', filteredPersons)
     })()
 
+    const deletePerson = (personId) => {
+        service.del(personId).then(
+            setPersons(persons.filter( p => p.id !== personId ))
+        )
+    }
+
 
     return (
         <div>
@@ -106,7 +120,7 @@ const App = () => {
             <Phonebook persons={persons} setPersons={setPersons} />
 
             <h2>Numbers</h2>
-            <Numbers filteredPersons={filteredPersons} />
+            <Numbers filteredPersons={filteredPersons} deletePerson= {deletePerson}/>
         </div>
     )
 }
